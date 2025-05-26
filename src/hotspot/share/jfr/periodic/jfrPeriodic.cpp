@@ -524,7 +524,7 @@ TRACE_REQUEST_FUNC(ThreadAllocationStatistics) {
  *  the total memory reported is the amount of memory configured for the guest OS by the hypervisor.
  */
 TRACE_REQUEST_FUNC(PhysicalMemory) {
-  u8 totalPhysicalMemory = os::physical_memory();
+  size_t totalPhysicalMemory = os::physical_memory();
   EventPhysicalMemory event;
   event.set_totalSize(totalPhysicalMemory);
   event.set_usedSize(totalPhysicalMemory - os::available_memory());
