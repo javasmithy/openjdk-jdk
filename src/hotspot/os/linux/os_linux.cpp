@@ -2547,9 +2547,9 @@ void os::print_memory_info(outputStream* st) {
   sysinfo(&si);
 
   st->print(", physical " UINT64_FORMAT "k",
-            os::physical_memory() >> 10);
+            static_cast<uint64_t>(os::physical_memory()) >> 10);
   st->print("(" UINT64_FORMAT "k free)",
-            os::available_memory() >> 10);
+            static_cast<uint64_t>(os::available_memory()) >> 10);
   st->print(", swap " UINT64_FORMAT "k",
             ((jlong)si.totalswap * si.mem_unit) >> 10);
   st->print("(" UINT64_FORMAT "k free)",
