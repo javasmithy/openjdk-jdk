@@ -50,11 +50,11 @@ class os::Linux {
 
  protected:
 
-  static julong _physical_memory;
+  static size_t _physical_memory;
   static pthread_t _main_thread;
 
-  static julong available_memory();
-  static julong free_memory();
+  static size_t available_memory();
+  static size_t free_memory();
 
 
   static void initialize_system_info();
