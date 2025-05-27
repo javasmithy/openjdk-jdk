@@ -118,7 +118,7 @@ class os::Linux {
   static uintptr_t initial_thread_stack_size(void)                  { return _initial_thread_stack_size; }
 
   static size_t physical_memory() { return _physical_memory; }
-  static julong host_swap();
+  static size_t host_swap();
 
   static intptr_t* ucontext_get_sp(const ucontext_t* uc);
   static intptr_t* ucontext_get_fp(const ucontext_t* uc);

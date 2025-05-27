@@ -336,7 +336,7 @@ size_t os::free_swap_space() {
 }
 
 size_t os::physical_memory() {
-  jlong phys_mem = 0;
+  size_t phys_mem = 0;
   if (OSContainer::is_containerized()) {
     jlong mem_limit;
     if ((mem_limit = OSContainer::memory_limit_in_bytes()) > 0) {
@@ -346,8 +346,8 @@ size_t os::physical_memory() {
   }
 
   phys_mem = Linux::physical_memory();
-  log_trace(os)("total system memory: " JLONG_FORMAT, phys_mem);
-  return static_cast<size_t>(phys_mem);
+  log_trace(os)("total system memory: " "%zu", phys_mem);
+  return phys_mem;
 }
 
 size_t os::rss() {
@@ -494,10 +494,10 @@ pid_t os::Linux::gettid() {
 
 // Returns the amount of swap currently configured, in bytes.
 // This can change at any time.
-julong os::Linux::host_swap() {
+size_t os::Linux::host_swap() {
   struct sysinfo si;
   sysinfo(&si);
-  return (julong)(si.totalswap * si.mem_unit);
+  return static_cast<size_t>(si.totalswap * si.mem_unit);
 }
 
 // Most versions of linux have a bug where the number of processors are
@@ -521,7 +521,7 @@ void os::Linux::initialize_system_info() {
       fclose(fp);
     }
   }
-  _physical_memory = (julong)sysconf(_SC_PHYS_PAGES) * (julong)sysconf(_SC_PAGESIZE);
+  _physical_memory = static_cast<size_t>(sysconf(_SC_PHYS_PAGES)) * static_cast<size_t>(sysconf(_SC_PAGESIZE));
   assert(processor_count() > 0, "linux error");
 }
 

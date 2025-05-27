@@ -40,7 +40,7 @@ class os::win32 {
  protected:
   static int    _processor_type;
   static int    _processor_level;
-  static julong _physical_memory;
+  static size_t _physical_memory;
   static bool   _is_windows_server;
   static bool   _has_exit_bug;
   static bool   _processor_group_warning_displayed;

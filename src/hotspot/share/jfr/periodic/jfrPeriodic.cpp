@@ -526,15 +526,15 @@ TRACE_REQUEST_FUNC(ThreadAllocationStatistics) {
 TRACE_REQUEST_FUNC(PhysicalMemory) {
   size_t totalPhysicalMemory = os::physical_memory();
   EventPhysicalMemory event;
-  event.set_totalSize(totalPhysicalMemory);
-  event.set_usedSize(totalPhysicalMemory - os::available_memory());
+  event.set_totalSize(static_cast<u8>(totalPhysicalMemory));
+  event.set_usedSize(static_cast<u8>(totalPhysicalMemory - os::available_memory()));
   event.commit();
 }
 
 TRACE_REQUEST_FUNC(SwapSpace) {
   EventSwapSpace event;
-  event.set_totalSize(os::total_swap_space());
-  event.set_freeSize(os::free_swap_space());
+  event.set_totalSize(static_cast<u8>(os::total_swap_space()));
+  event.set_freeSize(static_cast<u8>(os::free_swap_space()));
   event.commit();
 }
 
