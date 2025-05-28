@@ -1466,9 +1466,9 @@ void os::print_memory_info(outputStream* st) {
   st->print("Memory:");
   st->print(" %zuk page", os::vm_page_size()>>10);
 
-  st->print(", physical " "%zu" "k",
+  st->print(", physical %zu" "k",
             os::physical_memory() >> 10);
-  st->print("(" "%zu" "k free)",
+  st->print("(%zu" "k free)",
             os::available_memory() >> 10);
 
   if((sysctlbyname("vm.swapusage", &swap_usage, &size, nullptr, 0) == 0) || (errno == ENOMEM)) {

@@ -346,7 +346,7 @@ size_t os::physical_memory() {
   }
 
   phys_mem = Linux::physical_memory();
-  log_trace(os)("total system memory: " "%zu", phys_mem);
+  log_trace(os)("total system memory: %zu", phys_mem);
   return phys_mem;
 }
 
@@ -2546,9 +2546,9 @@ void os::print_memory_info(outputStream* st) {
   struct sysinfo si;
   sysinfo(&si);
 
-  st->print(", physical " "%zu" "k",
+  st->print(", physical %zu" "k",
             os::physical_memory() >> 10);
-  st->print("(" "%zu" "k free)",
+  st->print("(%zu" "k free)",
             os::available_memory() >> 10);
   st->print(", swap " UINT64_FORMAT "k",
             ((jlong)si.totalswap * si.mem_unit) >> 10);
