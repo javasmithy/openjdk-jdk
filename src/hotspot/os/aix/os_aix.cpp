@@ -278,20 +278,20 @@ size_t os::Aix::available_memory() {
   }
 }
 
-size_t os::total_swap_space() {
+ptrdiff_t os::total_swap_space() {
   perfstat_memory_total_t memory_info;
   if (libperfstat::perfstat_memory_total(nullptr, &memory_info, sizeof(perfstat_memory_total_t), 1) == -1) {
     return -1;
   }
-  return static_cast<size_t>(memory_info.pgsp_total * 4 * K);
+  return static_cast<ptrdiff_t>(memory_info.pgsp_total * 4 * K);
 }
 
-size_t os::free_swap_space() {
+ptrdiff_t os::free_swap_space() {
   perfstat_memory_total_t memory_info;
   if (libperfstat::perfstat_memory_total(nullptr, &memory_info, sizeof(perfstat_memory_total_t), 1) == -1) {
     return -1;
   }
-  return static_cast<size_t>(memory_info.pgsp_free * 4 * K);
+  return static_cast<ptrdiff_t>(memory_info.pgsp_free * 4 * K);
 }
 
 size_t os::physical_memory() {

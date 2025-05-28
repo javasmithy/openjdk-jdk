@@ -281,10 +281,10 @@ size_t os::Linux::free_memory() {
   return static_cast<size_t>(free_mem);
 }
 
-size_t os::total_swap_space() {
+ptrdiff_t os::total_swap_space() {
   if (OSContainer::is_containerized()) {
     if (OSContainer::memory_limit_in_bytes() > 0) {
-      return static_cast<size_t>(OSContainer::memory_and_swap_limit_in_bytes() - OSContainer::memory_limit_in_bytes());
+      return static_cast<ptrdiff_t>(OSContainer::memory_and_swap_limit_in_bytes() - OSContainer::memory_limit_in_bytes());
     }
   }
   struct sysinfo si;
@@ -292,22 +292,22 @@ size_t os::total_swap_space() {
   if (ret != 0) {
     return -1;
   }
-  return  static_cast<size_t>(si.totalswap * si.mem_unit);
+  return static_cast<ptrdiff_t>(si.totalswap * si.mem_unit);
 }
 
-static size_t host_free_swap() {
+static ptrdiff_t host_free_swap() {
   struct sysinfo si;
   int ret = sysinfo(&si);
   if (ret != 0) {
     return -1;
   }
-  return static_cast<size_t>(si.freeswap * si.mem_unit);
+  return static_cast<ptrdiff_t>(si.freeswap * si.mem_unit);
 }
 
-size_t os::free_swap_space() {
+ptrdiff_t os::free_swap_space() {
   // os::total_swap_space() might return the containerized limit which might be
   // less than host_free_swap(). The upper bound of free swap needs to be the lower of the two.
-  jlong host_free_swap_val = MIN2(os::total_swap_space(), host_free_swap());
+  jlong host_free_swap_val = static_cast<jlong>(MIN2(os::total_swap_space(), host_free_swap()));
   assert(host_free_swap_val >= 0, "sysinfo failed?");
   if (OSContainer::is_containerized()) {
     jlong mem_swap_limit = OSContainer::memory_and_swap_limit_in_bytes();
@@ -323,7 +323,7 @@ size_t os::free_swap_space() {
         jlong delta_usage = mem_swap_usage - mem_usage;
         if (delta_usage >= 0) {
           jlong free_swap = delta_limit - delta_usage;
-          return free_swap >= 0 ? static_cast<size_t>(free_swap) : 0;
+          return free_swap >= 0 ? static_cast<ptrdiff_t>(free_swap) : 0;
         }
       }
     }
@@ -332,7 +332,7 @@ size_t os::free_swap_space() {
                             " container_mem_limit=" JLONG_FORMAT " returning host value: " JLONG_FORMAT,
                             mem_swap_limit, mem_limit, host_free_swap_val);
   }
-  return static_cast<size_t>(host_free_swap_val);
+  return static_cast<ptrdiff_t>(host_free_swap_val);
 }
 
 size_t os::physical_memory() {

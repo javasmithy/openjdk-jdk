@@ -867,18 +867,18 @@ size_t os::win32::available_memory() {
   return static_cast<size_t>(ms.ullAvailPhys);
 }
 
-size_t os::total_swap_space() {
+ptrdiff_t os::total_swap_space() {
   MEMORYSTATUSEX ms;
   ms.dwLength = sizeof(ms);
   GlobalMemoryStatusEx(&ms);
-  return static_cast<size_t>(ms.ullTotalPageFile);
+  return static_cast<ptrdiff_t>(ms.ullTotalPageFile);
 }
 
-size_t os::free_swap_space() {
+ptrdiff_t os::free_swap_space() {
   MEMORYSTATUSEX ms;
   ms.dwLength = sizeof(ms);
   GlobalMemoryStatusEx(&ms);
-  return static_cast<size_t>(ms.ullAvailPageFile);
+  return static_cast<ptrdiff_t>(ms.ullAvailPageFile);
 }
 
 size_t os::physical_memory() {
