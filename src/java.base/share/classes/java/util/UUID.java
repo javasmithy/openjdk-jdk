@@ -75,7 +75,7 @@ import jdk.internal.util.HexDigits;
  *      RFC 9562 Universally Unique IDentifiers (UUIDs)
  * @since   1.5
  */
-public final class UUID implements java.io.Serializable, Comparable<java.util.UUID> {
+public final class UUID implements java.io.Serializable, Comparable<UUID> {
 
     /**
      * Explicit serialVersionUID for interoperability.
@@ -145,8 +145,8 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
      *
      * @return  A randomly generated {@code UUID}
      */
-    public static java.util.UUID randomUUID() {
-        SecureRandom ng = java.util.UUID.Holder.numberGenerator;
+    public static UUID randomUUID() {
+        SecureRandom ng = Holder.numberGenerator;
 
         byte[] randomBytes = new byte[16];
         ng.nextBytes(randomBytes);
@@ -154,7 +154,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
         randomBytes[6]  |= 0x40;  /* set to version 4     */
         randomBytes[8]  &= 0x3f;  /* clear variant        */
         randomBytes[8]  |= (byte) 0x80;  /* set to IETF variant  */
-        return new java.util.UUID(randomBytes);
+        return new UUID(randomBytes);
     }
 
     /**
@@ -166,7 +166,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
      *
      * @return  A {@code UUID} generated from the specified array
      */
-    public static java.util.UUID nameUUIDFromBytes(byte[] name) {
+    public static UUID nameUUIDFromBytes(byte[] name) {
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
@@ -178,7 +178,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
         md5Bytes[6]  |= 0x30;  /* set to version 3     */
         md5Bytes[8]  &= 0x3f;  /* clear variant        */
         md5Bytes[8]  |= (byte) 0x80;  /* set to IETF variant  */
-        return new java.util.UUID(md5Bytes);
+        return new UUID(md5Bytes);
     }
 
     /**
@@ -194,7 +194,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
      *
      * @spec RFC 9562
      */
-    public static java.util.UUID unixEpochTimeMillis() {
+    public static UUID unixEpochTimeMillis() {
         long timestamp = System.currentTimeMillis();
         return unixEpochTimeMillis(timestamp);
     }
@@ -220,12 +220,12 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
      *
      * @spec RFC 9562
      */
-    public static java.util.UUID unixEpochTimeMillis(long timestamp) {
+    public static UUID unixEpochTimeMillis(long timestamp) {
         if (timestamp < 0 || (timestamp >>> 48) != 0) {
             throw new IllegalArgumentException("Timestamp must be a 48-bit Unix Epoch time in milliseconds.");
         }
 
-        SecureRandom ng = java.util.UUID.Holder.numberGenerator;
+        SecureRandom ng = Holder.numberGenerator;
         byte[] randomBytes = new byte[16];
         ng.nextBytes(randomBytes);
 
@@ -242,7 +242,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
         randomBytes[8] &= 0x3f;
         randomBytes[8] |= (byte) 0x80;
 
-        return new java.util.UUID(randomBytes);
+        return new UUID(randomBytes);
     }
 
     private static final byte[] NIBBLES;
@@ -298,7 +298,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
      *          described in {@link #toString}
      *
      */
-    public static java.util.UUID fromString(String name) {
+    public static UUID fromString(String name) {
         if (name.length() == 36) {
             char ch1 = name.charAt(8);
             char ch2 = name.charAt(13);
@@ -314,7 +314,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
                 long lsb3 = parse4Nibbles(name, 28);
                 long lsb4 = parse4Nibbles(name, 32);
                 if ((msb1 | msb2 | msb3 | msb4 | lsb1 | lsb2 | lsb3 | lsb4) >= 0) {
-                    return new java.util.UUID(
+                    return new UUID(
                             msb1 << 48 | msb2 << 32 | msb3 << 16 | msb4,
                             lsb1 << 48 | lsb2 << 32 | lsb3 << 16 | lsb4);
                 }
@@ -323,7 +323,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
         return fromString1(name);
     }
 
-    private static java.util.UUID fromString1(String name) {
+    private static UUID fromString1(String name) {
         int len = name.length();
         if (len > 36) {
             throw new IllegalArgumentException("UUID string too large");
@@ -354,7 +354,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
         leastSigBits <<= 48;
         leastSigBits |= Long.parseLong(name, dash4 + 1, len, 16) & 0xffffffffffffL;
 
-        return new java.util.UUID(mostSigBits, leastSigBits);
+        return new UUID(mostSigBits, leastSigBits);
     }
 
     // Field Accessor Methods
@@ -422,7 +422,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
         // 1    1    0    Reserved, Microsoft backward compatibility
         // 1    1    1    Reserved for future definition.
         return (int) ((leastSigBits >>> (64 - (leastSigBits >>> 62)))
-                & (leastSigBits >> 63));
+                      & (leastSigBits >> 63));
     }
 
     /**
@@ -447,8 +447,8 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
         }
 
         return (mostSigBits & 0x0FFFL) << 48
-                | ((mostSigBits >> 16) & 0x0FFFFL) << 32
-                | mostSigBits >>> 32;
+             | ((mostSigBits >> 16) & 0x0FFFFL) << 32
+             | mostSigBits >>> 32;
     }
 
     /**
@@ -576,9 +576,9 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
      */
     @Override
     public boolean equals(Object obj) {
-        if ((null == obj) || (obj.getClass() != java.util.UUID.class))
+        if ((null == obj) || (obj.getClass() != UUID.class))
             return false;
-        java.util.UUID id = (java.util.UUID)obj;
+        UUID id = (UUID)obj;
         return (mostSigBits == id.mostSigBits &&
                 leastSigBits == id.leastSigBits);
     }
@@ -600,7 +600,7 @@ public final class UUID implements java.io.Serializable, Comparable<java.util.UU
      *
      */
     @Override
-    public int compareTo(java.util.UUID val) {
+    public int compareTo(UUID val) {
         // The ordering is intentionally set up so that the UUIDs
         // can simply be numerically compared as two numbers
         int mostSigBits = Long.compare(this.mostSigBits, val.mostSigBits);
