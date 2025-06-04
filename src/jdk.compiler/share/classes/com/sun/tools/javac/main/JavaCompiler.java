@@ -1756,16 +1756,12 @@ public class JavaCompiler {
                 if (results != null && file != null)
                     results.add(file);
             } catch (IOException
-                     | UncheckedIOException
-                     | FileSystemNotFoundException
-                     | InvalidPathException
-                     | ReadOnlyFileSystemException ex) {
-                String msg = ex.getMessage();
-                if (msg == null || msg.isEmpty()) {
-                    msg = ex.getClass().getSimpleName();
-                }
+                    | UncheckedIOException
+                    | FileSystemNotFoundException
+                    | InvalidPathException
+                    | ReadOnlyFileSystemException ex) {
                 log.error(cdef.pos(),
-                        Errors.ClassCantWrite(cdef.sym, msg));
+                          Errors.ClassCantWrite(cdef.sym, ex.getMessage()));
                 return;
             } finally {
                 log.useSource(prev);
